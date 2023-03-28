@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Dom Todolist</title>
+  </head>
+
+  <body>
+    <h1 class="text-5xl my-10 text-center">Todo List</h1>
+
+    <div class="container mx-auto w-1/2">
+      <form>
+        <div class="border flex">
+          <input
+            id="todo-input"
+            type="text"
+            placeholder="Write here what you will do..."
+            class="w-full p-3 relative z-90"
+          />
+          <button
+            id="add-todo"
+            type="submit"
+            class="px-6 py-3 bg-green-500 text-white"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+      <div class="flex justify-end my-5">
+        <button class="px-4 py-3 bg-red-500 text-white" onclick="clearTodos()">
+          Delete
+        </button>
+      </div>
+      <ul id="todos" class="border p-4 flex flex-col gap-y-4">
+        <!-- <li class="flex justify-between item-center border p-4 px-1">
+                <span>Todo Name</span>
+                <button class="text-red-500">Delete</button>
+            </li> -->
+      </ul>
+    </div>
+    <script>
+      const textInputDom = document.getElementById("todo-input");
+      const btnAddTodoDom = document.getElementById("add-todo");
+      const todosDom = document.querySelector("#todos");
+
+      let todos = [];
+
+      let textInputValue = "";
+      textInputDom.addEventListener("change", function (event) {
+        textInputValue = event.target.value;
+      });
+
+      btnAddTodoDom.addEventListener("click", function addTodo(event) {
+        event.preventDefault();
+        todos.unshift({
+          id: todos.length + 1,
+          todoTitle: textInputValue,
+        });
+        textInputDom.value = "";
+        displayTodo();
+      });
+
+      function displayTodo() {
+        let result = "";
+        if (todos.length === 0) {
+          todosDom.innerHTML = "The list is empty!";
+        } else {
+          todos.forEach((item) => {
+            result += `<li class="flex justify-between item-center border p-4 px-1">
+                <span>${item.todoTitle}</span>
+                <button class="text-red-500" onclick="deleteTodo(${item.id})">Delete</button>
+            </li>`;
+          });
+          todosDom.innerHTML = result;
+        }
+      }
+      function deleteTodo(id) {
+        let deletedId;
+        for (let index in todos) {
+          if (todos[index].id == id) {
+            deletedId = index;
+          }
+        }
+        todos.splice(deletedId, 1);
+        displayTodo();
+      }
+
+      function clearTodos() {
+        todos.splice(0, todos.length);
+        displayTodo();
+      }
+      displayTodo();
+    </script>
+  </body>
+</html>
